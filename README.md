@@ -17,3 +17,12 @@
 - Dependency management: `dep`
 - Database: `MySql`
 - Routing: `chi`
+
+## Additional Setting in vim .bashrc
+export GOROOT=/usr/local/go
+export PATH=$PATH:$GOROOT/bin
+
+export GOPATH=/home/`username`/golib
+export PATH=$PATH:$GOPATH/bin
+export GOPATH=$GOPATH:/home/`username`/code
+
