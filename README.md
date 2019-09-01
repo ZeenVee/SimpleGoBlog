@@ -19,10 +19,10 @@
 - Routing: `chi`
 
 ## Additional Setting in vim .bashrc
-export GOROOT=/usr/local/go
-export PATH=$PATH:$GOROOT/bin
+ export GOROOT=/usr/local/go</br>
+ export PATH=$PATH:$GOROOT/bin</br>
 
-export GOPATH=/home/`username`/golib
-export PATH=$PATH:$GOPATH/bin
-export GOPATH=$GOPATH:/home/`username`/code
+ export GOPATH=/home/`username`/golib</br>
+ export PATH=$PATH:$GOPATH/bin</br>
+ export GOPATH=$GOPATH:/home/`username`/code</br>
 
