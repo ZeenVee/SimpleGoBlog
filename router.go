@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -20,7 +19,7 @@ func routers() *chi.Mux {
 
 //-------------------------API STARTING POINT-------------------------//
 func ping(w http.ResponseWriter, r *http.Request) {
-	rbody, isDBAvailable := dbAvailablityResponse()
+	rbody, isDBAvailable := dbAvailablityResponse(db)
 
 	if !isDBAvailable {
 		rbody.Message = "Server Unavailable"
@@ -30,11 +29,14 @@ func ping(w http.ResponseWriter, r *http.Request) {
 }
 
 //----------------------------API ENDPOINT----------------------------//
+//All API endpoint request will start to check server availability before
+//proceed to user's request input
+
 //returns all article data
 func GetAllArticle(w http.ResponseWriter, r *http.Request) {
 	errors := []error{}
 	data := []Article{}
-	rbody, isDBAvailable := dbAvailablityResponse()
+	rbody, isDBAvailable := dbAvailablityResponse(db)
 
 	if !isDBAvailable {
 		respondwithJSON(w, rbody.Status, rbody)
@@ -73,7 +75,7 @@ func GetAllArticle(w http.ResponseWriter, r *http.Request) {
 
 //create a new post
 func CreateArticle(w http.ResponseWriter, r *http.Request) {
-	rbody, isDBAvailable := dbAvailablityResponse()
+	rbody, isDBAvailable := dbAvailablityResponse(db)
 
 	if !isDBAvailable {
 		respondwithJSON(w, rbody.Status, rbody)
@@ -111,7 +113,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetArticleByID(w http.ResponseWriter, r *http.Request) {
-	rbody, isDBAvailable := dbAvailablityResponse()
+	rbody, isDBAvailable := dbAvailablityResponse(db)
 
 	if !isDBAvailable {
 		respondwithJSON(w, rbody.Status, rbody)
@@ -138,68 +140,4 @@ func GetArticleByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondwithJSON(w, rbody.Status, rbody)
-}
-
-//					db Helper
-func dbAvailablityResponse() (ResponseBody, bool) {
-	if db.Ping() != nil {
-		fmt.Println("Test", db.Ping())
-		return ResponseBody{
-			Status: http.StatusServiceUnavailable,
-			Message: "The server is currently unable to handle the request due to " +
-				"a temporary overloading or maintenance of the server",
-		}, false
-	}
-
-	return ResponseBody{
-		Status:  http.StatusOK,
-		Message: "Server Available",
-	}, true
-}
-
-//						content helper
-func articleValidityResponse(article Article) (ResponseBody, bool) {
-	code := articleValidityCode(article.Title, 0) + articleValidityCode(article.Content, 1) +
-		articleValidityCode(article.Author, 2)
-
-	rbody := ResponseBody{
-		Status:  http.StatusLengthRequired,
-		Message: "Empty fields: ",
-	}
-
-	switch code {
-	case 0:
-		rbody.Message += "title, content, author"
-		return rbody, false
-	case 1:
-		rbody.Message += "content, author"
-		return rbody, false
-	case 2:
-		rbody.Message += "title, author"
-		return rbody, false
-	case 3:
-		rbody.Message += "author"
-		return rbody, false
-	case 4:
-		rbody.Message += "title, content"
-		return rbody, false
-	case 5:
-		rbody.Message += "content"
-		return rbody, false
-	case 6:
-		rbody.Message += "title"
-		return rbody, false
-	}
-
-	return ResponseBody{
-		Status: http.StatusOK,
-	}, true
-}
-
-func articleValidityCode(text string, order uint) int {
-	if len(text) > 0 {
-		return (1 << order)
-	}
-
-	return 0
 }

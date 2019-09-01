@@ -13,10 +13,7 @@ func catch(err error) {
 	}
 }
 
-func respondwithError(w http.ResponseWriter, code int, msg string) {
-	respondwithJSON(w, code, map[string]string{"message": msg})
-}
-
+//write JSON response format
 func respondwithJSON(w http.ResponseWriter, code int, posts interface{}) {
 
 	response, _ := json.Marshal(posts)
@@ -26,6 +23,7 @@ func respondwithJSON(w http.ResponseWriter, code int, posts interface{}) {
 	w.Write(response)
 }
 
+//Print the log in every request on the terminal
 func Logger() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(time.Now(), r.Method, r.URL)

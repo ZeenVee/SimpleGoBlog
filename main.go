@@ -10,9 +10,11 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+//router variable and database variable
 var router *chi.Mux
 var db *sql.DB
 
+//DB constant
 const (
 	dbName = "go-blog-author"
 	dbPass = "admin1314"
@@ -20,6 +22,7 @@ const (
 	dbPort = "3306"
 )
 
+//Model for article
 type Article struct {
 	ID      int    `json:"id,omitempty"`
 	Title   string `json:"title,omitempty"`
@@ -27,12 +30,16 @@ type Article struct {
 	Author  string `json:"author,omitempty"`
 }
 
+//Model for response body
 type ResponseBody struct {
 	Status  int       `json:"status"`
 	Message string    `json:"message"`
 	Data    []Article `json:"data"`
 }
 
+//init router and set up connection with database
+//use middleware.Recoverer so that if any request fails, app less likely to die
+//and can request again without restart app
 func init() {
 	router = chi.NewRouter()
 	router.Use(middleware.Recoverer)
@@ -47,5 +54,5 @@ func init() {
 
 func main() {
 	routers()
-	http.ListenAndServe(":8005", Logger())
+	http.ListenAndServe(":8080", Logger())
 }
