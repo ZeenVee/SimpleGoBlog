@@ -1,7 +1,7 @@
 # Simple Blog using Golang
 
 ## API Endpoint
-###Create an article
+### Create an article
 - Method: `POST`
 - Path: `/articles`
 
