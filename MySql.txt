@@ -1,0 +1,12 @@
+CREATE DATABASE IF NOT EXISTS `go-blog`;
+USE `go-blog`;
+
+DROP TABLE IF EXISTS `articles`;
+
+CREATE TABLE `posts`(
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+`content` longtext COLLATE utf8_unicode_ci NOT NULL,
+`author` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+PRIMARY KEY (`id`)
+);
