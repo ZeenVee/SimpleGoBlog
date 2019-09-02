@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+  web:
+    image: simple-blog
+    ports:
+      - 8080:8080
+    links:
+      - mysql
+    environment:
+      - "DB_PORT=3306"
+      - "DB_HOST=localhost"
+      - "DB_NAME=go-blog-author"
+      - "DB_PASS=admin1314"
+  
+  mysql:
+    image: mysql:5.7
+    ports:
+      - 3300:3306
+    volumes:
+      - /mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'localhost'
+      MYSQL_PASSWORD: 'admin1314'
+      MYSQL_ROOT_PASSWORD: 'admin1314'
+    
